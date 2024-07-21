@@ -1,0 +1,63 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  namespace: memos
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: memos.ecc-comp.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: memos
+                port:
+                  number: 5230
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memos
+  namespace: memos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memos
+  template:
+    metadata:
+      labels:
+        app: memos
+    spec:
+      containers:
+        - name: memos
+          image: neosmemo/memos:stable
+          ports:
+            - containerPort: 5230
+          env:
+            - name: MEMOS_PORT
+              value: "5230"
+            - name: MEMOS_DRIVER
+              value: "postgres"
+            - name: MEMOS_DSN
+              value: "postgresql://user:password@192.168.11.253:5433/database?sslmode=disable"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: memos
+  namespace: memos
+spec:
+  selector:
+    app: memos
+  ports:
+    - protocol: TCP
+      port: 5230
+      targetPort: 5230
+  type: NodePort

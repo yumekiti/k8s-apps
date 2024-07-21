@@ -1,0 +1,123 @@
+# Namespace Gitea
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gitea
+---
+# Deployment Gitea
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea
+  namespace: gitea
+  labels:
+    app: gitea
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitea
+  template:
+    metadata:
+      labels:
+        app: gitea
+    spec:
+      containers:
+      - name: gitea
+        image: gitea/gitea:1.22.1
+        env:
+        - name: USER_UID
+          value: "1000"
+        - name: USER_GID
+          value: "1000"
+        - name: GITEA__database__DB_TYPE
+          value: "postgres"
+        - name: GITEA__database__HOST
+          value: "10.201.10.61:5432"
+        - name: GITEA__database__NAME
+          value: "database"
+        - name: GITEA__database__USER
+          value: "user"
+        - name: GITEA__database__PASSWD
+          value: "password"
+        ports:
+        - containerPort: 3000
+          name: gitea
+        - containerPort: 22
+          name: git-ssh
+        volumeMounts:
+        - mountPath: /data
+          name: git-data
+      volumes:
+      - name: git-data
+        persistentVolumeClaim:
+          claimName: git-pvc
+---
+# Persistent Volume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: git-pv
+  namespace: gitea
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: longhorn-durable
+  hostPath:
+    path: "/mnt/data/gitea"
+    type: DirectoryOrCreate
+---
+# Persistent Volume Claim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: git-pvc
+  namespace: gitea
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: longhorn-durable
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitea-service
+  namespace: gitea
+spec:
+  selector:
+    app: gitea
+  ports:
+  - name: gitea-http
+    port: 3000
+  - name: gitea-ssh
+    port: 22
+---
+# Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: git-tls
+  namespace: gitea
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: gitea.ecc-comp.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: gitea-service
+            port:
+              number: 3000
