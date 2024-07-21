@@ -72,7 +72,7 @@ spec:
         - name: AUDIT_LOG_ENABLED
           value: 'true'
         - name: MONGO_URI
-          value: mongodb://192.168.11.253:27017/growi
+          value: mongodb://10.201.10.61:27017/growi
         - name: PASSWORD_SEED
           value: NfkbRhXdsCUW
 ---
