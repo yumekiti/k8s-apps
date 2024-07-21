@@ -46,7 +46,7 @@ spec:
             - name: MEMOS_DRIVER
               value: "postgres"
             - name: MEMOS_DSN
-              value: "postgresql://user:password@10.201.10.61:5433/database?sslmode=disable"
+              value: "postgresql://user:password@10.201.10.61:5435/database?sslmode=disable"
 ---
 apiVersion: v1
 kind: Service
