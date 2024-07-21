@@ -92,7 +92,7 @@ spec:
         app: growi-elasticsearch
     spec:
       containers:
-      - image: thr3a/growi-es
+      - image: gcr.io/example-project-id/growi-on-k8s-es
         name: growi-elasticsearch
         env:
         - name: ES_JAVA_OPTS
