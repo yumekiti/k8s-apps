@@ -106,7 +106,7 @@ spec:
     spec:
       containers:
       - name: growi-elasticsearch
-        image: elasticsearch:7.17.24
+        image: extendwings/growi-elasticsearch:7.17.19
         ports:
         - containerPort: 9200
         env:
