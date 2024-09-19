@@ -68,42 +68,69 @@ spec:
         - containerPort: 3000
         env:
         - name: ELASTICSEARCH_URI
-          value: http://growi-elasticsearch:9200/growi
+          value: http://growi-elasticsearch-service:9200/growi
         - name: AUDIT_LOG_ENABLED
           value: 'true'
         - name: MONGO_URI
           value: mongodb://10.201.10.61:27017/growi
         - name: PASSWORD_SEED
           value: NfkbRhXdsCUW
-# ---
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: growi-elasticsearch
-#   namespace: growi
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: growi-elasticsearch
-#   template:
-#     metadata:
-#       labels:
-#         app: growi-elasticsearch
-#     spec:
-#       containers:
-#       - image: gcr.io/example-project-id/growi-on-k8s-es
-#         name: growi-elasticsearch
-#         env:
-#         - name: ES_JAVA_OPTS
-#           value: "-Xms512m -Xmx512m"
-#         resources:
-#           limits:
-#             memory: "512Mi"
-#             cpu: "500m"
-#           requests:
-#             memory: "256Mi"
-#             cpu: "250m"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elasticsearch-config
+  namespace: growi
+data:
+  elasticsearch.yml: |
+    http.host: 0.0.0.0
+
+    # for elasticsearch-head
+    http.cors.enabled: true
+    http.cors.allow-origin: "*"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: growi-elasticsearch
+  namespace: growi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: growi-elasticsearch
+  template:
+    metadata:
+      labels:
+        app: growi-elasticsearch
+    spec:
+      containers:
+      - name: growi-elasticsearch
+        image: yumekiti/growi-elasticsearch
+        ports:
+        - containerPort: 9200
+        env:
+        - name: ES_JAVA_OPTS
+          value: "-Xms512m -Xmx512m"
+        - name: LOG4J_FORMAT_MSG_NO_LOOKUPS
+          value: "true"
+        - name: bootstrap.memory_lock
+          value: "true"
+        volumeMounts:
+        - name: config
+          mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+          subPath: elasticsearch.yml
+        resources:
+          limits:
+            memory: "1Gi"
+#            memory: "512Mi"
+          requests:
+            memory: "512Mi"
+#            memory: "256Mi"
+      volumes:
+      - name: config
+        configMap:
+          name: elasticsearch-config
 ---
 apiVersion: v1
 kind: ConfigMap
