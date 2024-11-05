@@ -184,7 +184,7 @@ metadata:
   name: growi-nginx
   namespace: growi
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: growi-nginx
