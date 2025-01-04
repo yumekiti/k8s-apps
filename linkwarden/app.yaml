@@ -23,11 +23,11 @@ spec:
             - name: NEXTAUTH_SECRET
               value: "NfkbRhXdsCUW"
             - name: NEXTAUTH_URL
-              value: "https://linkwarden.ecc-comp.com/api/v1/auth"
+              value: "https://linkwarden.yumekiti.net/api/v1/auth"
             - name: NEXT_PUBLIC_KEYCLOAK_ENABLED
               value: "true"
             - name: KEYCLOAK_ISSUER
-              value: "http://keycloak.ecc-comp.com/realms/general"
+              value: "http://keycloak.yumekiti.net/realms/general"
             - name: KEYCLOAK_CLIENT_ID
               value: "linkwarden"
             - name: KEYCLOAK_CLIENT_SECRET
@@ -57,7 +57,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: linkwarden.ecc-comp.com
+  - host: linkwarden.yumekiti.net
     http:
       paths:
       - path: /

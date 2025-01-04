@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: memos.ecc-comp.com
+    - host: memos.yumekiti.net
       http:
         paths:
           - path: /

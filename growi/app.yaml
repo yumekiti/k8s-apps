@@ -7,7 +7,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: growi.ecc-comp.com
+  - host: growi.yumekiti.net
     http:
       paths:
       - path: /
@@ -149,8 +149,8 @@ data:
     }
 
     map $http_origin $cors{
-      "https://blog.ecc-comp.com" $http_origin;
-      "http://blog.ecc-comp.com" $http_origin;
+      "https://blog.yumekiti.net" $http_origin;
+      "http://blog.yumekiti.net" $http_origin;
     }
 
     server {

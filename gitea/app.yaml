@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: gitea
-        image: gitea/gitea:1.22.1
+        image: gitea/gitea:1.22.6
         env:
         - name: USER_UID
           value: "1000"
@@ -111,7 +111,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: gitea.ecc-comp.com
+  - host: gitea.yumekiti.net
     http:
       paths:
       - path: /
