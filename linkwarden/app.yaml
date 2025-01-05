@@ -19,7 +19,7 @@ spec:
           image: ghcr.io/linkwarden/linkwarden:latest
           env:
             - name: DATABASE_URL
-              value: "postgresql://user:password@10.201.10.61:5434/database"
+              value: "postgresql://user:password@192.168.11.253:5434/database"
             - name: NEXTAUTH_SECRET
               value: "NfkbRhXdsCUW"
             - name: NEXTAUTH_URL

@@ -25,7 +25,7 @@ spec:
             - name: KC_DB
               value: "postgres"
             - name: KC_DB_URL
-              value: "jdbc:postgresql://10.201.10.61:5433/database"
+              value: "jdbc:postgresql://192.168.11.253:5435/database"
             - name: KC_DB_USERNAME
               value: "user"
             - name: KC_DB_PASSWORD
