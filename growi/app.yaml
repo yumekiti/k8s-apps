@@ -4,6 +4,10 @@ kind: Ingress
 metadata:
   name: growi-ingress
   namespace: growi
+  annotations:
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS, PUT, DELETE"
 spec:
   ingressClassName: nginx
   rules:
